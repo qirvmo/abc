@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VRChat.pw — 玩家社区站点</title>
+  <meta name="description" content="VRChat.pw 是一个由 VRChat 玩家社区持有的域名，与 VRChat 官方无任何关联。">
+  <style>
+    /* ===== 基础重置与变量 ===== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #141418;
+      --bg-raised: #1c1c22;
+      --border: #2a2a32;
+      --text-primary: #eaeaef;
+      --text-secondary: #9898a4;
+      --text-muted: #6b6b76;
+      --accent: #f0a04b;
+      --accent-dim: rgba(240, 160, 75, 0.12);
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial,
+        sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+    }
+
+    /* ===== 主容器 ===== */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem;
+      max-width: 640px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ===== 非官方徽章 ===== */
+    .unofficial-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.9rem;
+      border: 1px solid var(--accent);
+      border-radius: 999px;
+      background: var(--accent-dim);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+
+    .unofficial-badge svg {
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0;
+    }
+
+    /* ===== 主标题 ===== */
+    h1 {
+      font-size: clamp(2rem, 6vw, 3.25rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      text-align: center;
+      margin-bottom: 1.25rem;
+    }
+
+    h1 .domain {
+      color: var(--accent);
+    }
+
+    /* ===== 声明段落 ===== */
+    .statement {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 1.0625rem;
+      line-height: 1.75;
+      margin-bottom: 2.5rem;
+    }
+
+    .statement strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* ===== 信息卡片 ===== */
+    .info-card {
+      width: 100%;
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .info-card h2 {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.875rem;
+    }
+
+    .info-card p {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      line-height: 1.7;
+    }
+
+    /* ===== 页脚 ===== */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+      line-height: 1.6;
+    }
+
+    footer a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    footer a:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* ===== 动效 ===== */
+    @media (prefers-reduced-motion: no-preference) {
+      .unofficial-badge {
+        animation: fadeSlideDown 0.6s ease-out both;
+      }
+      h1 {
+        animation: fadeSlideUp 0.6s ease-out 0.1s both;
+      }
+      .statement {
+        animation: fadeSlideUp 0.6s ease-out 0.2s both;
+      }
+      .info-card {
+        animation: fadeSlideUp 0.6s ease-out 0.3s both;
+      }
+    }
+
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeSlideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main>
+    <!-- 非官方徽章 -->
+    <div class="unofficial-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      非官方 · 玩家社区
+    </div>
+
+    <!-- 主标题 -->
+    <h1>Welcome to<br><span class="domain">VRChat.pw</span></h1>
+
+    <!-- 核心声明 -->
+    <p class="statement">
+      这是一个由 VRChat 玩家社区持有的域名站点，
+      <strong>与 VRChat 官方（VRChat Inc.）没有任何关联</strong>，
+      也不代表官方立场。
+    </p>
+
+    <!-- 信息卡片 -->
+    <div class="info-card">
+      <h2>关于这个站点</h2>
+      <p>
+        VRChat.pw 是一个由玩家自行注册和管理的社区域名，用于 VRChat 玩家之间的交流、分享与社区活动。
+        如果你在寻找官方网站，请访问
+        <a href="https://www.vrchat.com" style="color: var(--accent); text-decoration: none;">vrchat.com</a>。
+      </p>
+    </div>
+  </main>
+
+  <!-- 页脚 -->
+  <footer>
+    <p>
+      VRChat 及相关商标归 VRChat Inc. 所有。本站为粉丝社区站点，与官方无隶属关系。
+    </p>
+  </footer>
+
+</body>
+</html>
