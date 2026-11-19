@@ -1,237 +1,515 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VRChat.pw — 玩家社区站点</title>
-  <meta name="description" content="VRChat.pw 是一个由 VRChat 玩家社区持有的域名，与 VRChat 官方无任何关联。">
-  <style>
-    /* ===== 基础重置与变量 ===== */
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>祁欣网络 | Suqx_Official</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="https://cdn.jsdelivr.net/npm/live2d-widget@3.1.4/lib/L2Dwidget.min.js"></script>
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Microsoft YaHei",sans-serif;
+  scroll-behavior: smooth;
+}
+:root{
+  --main:#e888bb;
+  --light:#ffd6e8;
+  --glass:rgba(255,255,255,0.12);
+  --glass-border:rgba(255,255,255,0.22);
+  --text:#fff;
+  --dark-bg:#0f0e18;
+}
+html, body{
+  min-height:100%;
+  overflow-x:hidden;
+  background: var(--dark-bg) url("") no-repeat fixed center;
+  background-size:cover;
+  color:var(--text);
+  line-height:1.7;
+  background-color: var(--dark-bg);
+}
+/* 星星粒子画布 */
+#starCanvas{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index:0;
+  pointer-events:none;
+}
+/* 鼠标光点 */
+#lightDot{
+  position:fixed;
+  width:220px;
+  height:220px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(232,136,187,0.18),transparent 70%);
+  pointer-events:none;
+  z-index:1;
+  transform:translate(-50%,-50%);
+  transition:0.12s ease;
+}
+/* 导航栏 支持移动端汉堡菜单 */
+nav{
+  position:sticky;
+  top:0;
+  z-index:99;
+  transition: all 0.4s ease;
+}
+.nav-wrap{
+  max-width:1200px;
+  margin:0 auto;
+  padding:16px 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:relative;
+  z-index:2;
+}
+nav.scrolled{
+  background:rgba(20,20,35,0.72);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--glass-border);
+}
+.logo{
+  font-size:24px;
+  font-weight:bold;
+  color:var(--light);
+  text-decoration:none;
+  transition:0.3s;
+  animation:logoPulse 3s infinite ease-in-out;
+}
+@keyframes logoPulse{
+  0%,100%{text-shadow:0 0 8px rgba(255,214,232,0.4)}
+  50%{text-shadow:0 0 16px rgba(232,136,187,0.7)}
+}
+.logo:hover{
+  color:var(--main);
+}
+.nav-links{
+  display:flex;
+  gap:16px;
+  align-items:center;
+}
+.nav-links a{
+  color:#fff;
+  text-decoration:none;
+  font-size:15px;
+  transition:0.25s;
+  position:relative;
+}
+.nav-links a:hover{
+  color:var(--main);
+}
+.nav-links a::after{
+  content:"";
+  position:absolute;
+  width:0;
+  height:2px;
+  bottom:-4px;
+  left:0;
+  background:linear-gradient(90deg,#e888bb,#ffd6e8,#e888bb);
+  transition:0.4s;
+}
+.nav-links a:hover::after{
+  width:100%;
+}
+/* 汉堡按钮 */
+.hamburger{
+  display:none;
+  font-size:28px;
+  color:#fff;
+  cursor:pointer;
+}
+@media(max-width:720px){
+  .hamburger{
+    display:block;
+  }
+  .nav-links{
+    position:absolute;
+    top:100%;
+    left:0;
+    width:100%;
+    flex-direction:column;
+    align-items:center;
+    padding:20px 0;
+    background:rgba(20,20,35,0.72);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--glass-border);
+    display:none;
+  }
+  .nav-links.active{
+    display:flex;
+  }
+}
 
-    :root {
-      --bg: #141418;
-      --bg-raised: #1c1c22;
-      --border: #2a2a32;
-      --text-primary: #eaeaef;
-      --text-secondary: #9898a4;
-      --text-muted: #6b6b76;
-      --accent: #f0a04b;
-      --accent-dim: rgba(240, 160, 75, 0.12);
-    }
-
-    html {
-      font-size: 16px;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
-        "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial,
-        sans-serif;
-      background: var(--bg);
-      color: var(--text-primary);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      line-height: 1.6;
-    }
-
-    /* ===== 主容器 ===== */
-    main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 3rem 1.5rem;
-      max-width: 640px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    /* ===== 非官方徽章 ===== */
-    .unofficial-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.4rem 0.9rem;
-      border: 1px solid var(--accent);
-      border-radius: 999px;
-      background: var(--accent-dim);
-      color: var(--accent);
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 2rem;
-    }
-
-    .unofficial-badge svg {
-      width: 12px;
-      height: 12px;
-      flex-shrink: 0;
-    }
-
-    /* ===== 主标题 ===== */
-    h1 {
-      font-size: clamp(2rem, 6vw, 3.25rem);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.15;
-      text-align: center;
-      margin-bottom: 1.25rem;
-    }
-
-    h1 .domain {
-      color: var(--accent);
-    }
-
-    /* ===== 声明段落 ===== */
-    .statement {
-      text-align: center;
-      color: var(--text-secondary);
-      font-size: 1.0625rem;
-      line-height: 1.75;
-      margin-bottom: 2.5rem;
-    }
-
-    .statement strong {
-      color: var(--text-primary);
-      font-weight: 600;
-    }
-
-    /* ===== 信息卡片 ===== */
-    .info-card {
-      width: 100%;
-      background: var(--bg-raised);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.5rem 1.75rem;
-      margin-bottom: 2.5rem;
-    }
-
-    .info-card h2 {
-      font-size: 0.8125rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-muted);
-      margin-bottom: 0.875rem;
-    }
-
-    .info-card p {
-      color: var(--text-secondary);
-      font-size: 0.9375rem;
-      line-height: 1.7;
-    }
-
-    /* ===== 页脚 ===== */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 1.5rem;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.8125rem;
-      line-height: 1.6;
-    }
-
-    footer a {
-      color: var(--text-secondary);
-      text-decoration: none;
-      border-bottom: 1px solid var(--border);
-      transition: color 0.2s, border-color 0.2s;
-    }
-
-    footer a:hover {
-      color: var(--accent);
-      border-color: var(--accent);
-    }
-
-    /* ===== 动效 ===== */
-    @media (prefers-reduced-motion: no-preference) {
-      .unofficial-badge {
-        animation: fadeSlideDown 0.6s ease-out both;
-      }
-      h1 {
-        animation: fadeSlideUp 0.6s ease-out 0.1s both;
-      }
-      .statement {
-        animation: fadeSlideUp 0.6s ease-out 0.2s both;
-      }
-      .info-card {
-        animation: fadeSlideUp 0.6s ease-out 0.3s both;
-      }
-    }
-
-    @keyframes fadeSlideUp {
-      from {
-        opacity: 0;
-        transform: translateY(12px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes fadeSlideDown {
-      from {
-        opacity: 0;
-        transform: translateY(-12px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  </style>
+/* 首屏Banner */
+.banner{
+  min-height:88vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:40px 20px;
+  position:relative;
+  z-index:2;
+}
+.banner-content{
+  background:var(--glass);
+  backdrop-filter:blur(16px);
+  border-radius:28px;
+  border:1px solid var(--glass-border);
+  padding:54px 36px;
+  max-width:760px;
+  text-shadow:0 2px 8px rgba(0,0,0,0.35);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  animation:bannerFloat 6s infinite ease-in-out;
+}
+@keyframes bannerFloat{
+  0%,100%{transform:translateY(0px)}
+  50%{transform:translateY(-10px)}
+}
+.banner h1{
+  font-size:46px;
+  margin-bottom:14px;
+  letter-spacing: 2px;
+  opacity:0;
+}
+.banner p{
+  font-size:18px;
+  opacity:0.92;
+  margin-bottom:32px;
+  opacity:0;
+}
+.btn{
+  display:inline-block;
+  padding:14px 32px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#f098c8,#c770b2);
+  color:#fff;
+  text-decoration:none;
+  font-weight:500;
+  transition:0.35s ease;
+  box-shadow:0 4px 16px rgba(232,136,187,0.3);
+  opacity:0;
+}
+.btn:hover{
+  transform:translateY(-4px) scale(1.04);
+  box-shadow:0 10px 28px rgba(232,136,187,0.45);
+}
+/* 区块通用 */
+section{
+  max-width:1200px;
+  margin:0 auto;
+  padding:80px 24px;
+  position:relative;
+  z-index:2;
+  opacity:0;
+  transform: translateY(40px);
+  transition: all 0.8s cubic-bezier(0.2,0.8,0.2,1);
+}
+section.show{
+  opacity:1;
+  transform: translateY(0);
+}
+.section-title{
+  text-align:center;
+  font-size:32px;
+  margin-bottom:48px;
+  color:var(--light);
+  letter-spacing: 1px;
+  position:relative;
+}
+.section-title::after{
+  content:"";
+  width:80px;
+  height:2px;
+  background:linear-gradient(90deg,transparent,var(--main),transparent);
+  display:block;
+  margin:10px auto 0;
+  animation:titleLine 2s infinite;
+}
+@keyframes titleLine{
+  0%,100%{opacity:0.5}
+  50%{opacity:1}
+}
+.grid3{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:26px;
+}
+.card{
+  background:var(--glass);
+  backdrop-filter:blur(14px);
+  border:1px solid var(--glass-border);
+  border-radius:24px;
+  padding:30px;
+  transition:0.4s cubic-bezier(0.2,0.8,0.2,1);
+  box-shadow:0 8px 24px rgba(0,0,0,0.2);
+}
+.card:hover{
+  transform:translateY(-10px) rotateX(3deg);
+  background:rgba(255,255,255,0.18);
+  box-shadow:0 16px 38px rgba(232,136,187,0.22);
+}
+.card h3{
+  margin-bottom:12px;
+  color:var(--light);
+  font-size:22px;
+}
+@media(max-width:768px){
+  .grid3{
+    grid-template-columns:1fr;
+  }
+}
+/* 成员卡片头像 */
+.member-avatar{
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  object-fit:cover;
+  display:block;
+  margin:0 auto 14px;
+  border:3px solid rgba(255,255,255,0.25);
+  transition:0.4s;
+}
+.card:hover .member-avatar{
+  border-color: var(--main);
+  box-shadow:0 0 18px rgba(232,136,187,0.5);
+  transform:scale(1.08);
+}
+.member-tag{
+  color:#ffc8e0;
+  font-size:14px;
+  text-align:center;
+  margin-bottom:10px;
+}
+/* 关于 */
+.about-wrap{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:36px;
+  align-items:center;
+}
+@media(max-width:720px){
+  .about-wrap{
+    grid-template-columns:1fr;
+  }
+}
+/* 页脚 */
+footer{
+  background:rgba(12,12,22,0.75);
+  backdrop-filter:blur(10px);
+  padding:40px 20px;
+  text-align:center;
+  border-top:1px solid var(--glass-border);
+  margin-top:40px;
+  position:relative;
+  z-index:2;
+}
+footer a{
+  color:var(--light);
+  text-decoration:none;
+}
+</style>
 </head>
 <body>
-
-  <main>
-    <!-- 非官方徽章 -->
-    <div class="unofficial-badge">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-        <line x1="12" y1="9" x2="12" y2="13"/>
-        <line x1="12" y1="17" x2="12.01" y2="17"/>
-      </svg>
-      非官方 · 玩家社区
+<canvas id="starCanvas"></canvas>
+<div id="lightDot"></div>
+<!-- 导航 -->
+<nav id="mainNav">
+  <div class="nav-wrap">
+    <a href="#" class="logo">✦ 祁欣网络</a>
+    <div class="hamburger" id="hamburger">
+      <i class="fa fa-bars"></i>
     </div>
-
-    <!-- 主标题 -->
-    <h1>Welcome to<br><span class="domain">VRChat.pw</span></h1>
-
-    <!-- 核心声明 -->
-    <p class="statement">
-      这是一个由 VRChat 玩家社区持有的域名站点，
-      <strong>与 VRChat 官方（VRChat Inc.）没有任何关联</strong>，
-      也不代表官方立场。
-    </p>
-
-    <!-- 信息卡片 -->
-    <div class="info-card">
-      <h2>关于这个站点</h2>
-      <p>
-        VRChat.pw 是一个由玩家自行注册和管理的社区域名，用于 VRChat 玩家之间的交流、分享与社区活动。
-        如果你在寻找官方网站，请访问
-        <a href="https://www.vrchat.com" style="color: var(--accent); text-decoration: none;">vrchat.com</a>。
-      </p>
+    <div class="nav-links" id="navMenu">
+      <a href="#about">社团介绍</a>
+      <a href="#member">成员列表</a>
+      <a href="#contact">加入/联系</a>
     </div>
-  </main>
+  </div>
+</nav>
 
-  <!-- 页脚 -->
-  <footer>
-    <p>
-      VRChat 及相关商标归 VRChat Inc. 所有。本站为粉丝社区站点，与官方无隶属关系。
-    </p>
-  </footer>
+<!-- 首屏Banner -->
+<div class="banner">
+  <div class="banner-content">
+    <h1 id="bannerTitle">欢迎来到祁欣网络Suqx.cn</h1>
+    <p id="bannerDesc">来自世界各地的普通人。</p>
+    <a href="#member" class="btn" id="bannerBtn">看看大家</a>
+  </div>
+</div>
 
+<!-- 社团介绍 -->
+<section id="about">
+  <h2 class="section-title">介绍</h2>
+  <div class="about-wrap">
+    <div class="card">
+      <h3>我们是谁</h3>
+      <p>我们是来自世界各地相识的普通人。</p>
+    </div>
+    <div class="card">
+      <h3>为什么要建立这个网站</h3>
+      <p>整体而言，为了纪念。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 成员列表 -->
+<section id="member">
+  <h2 class="section-title">社团成员</h2>
+  <div class="grid3">
+    <div class="card">
+      <img class="member-avatar" src="https://q.qlogo.cn/g?b=qq&nk=35913483&s=640">
+      <h3 style="text-align:center">苏祁欣</h3>
+      <div class="member-tag">群主 / 魔王头子</div>
+      <p style="text-align:center">来自延边朝鲜族自治州，依旧群最杂鱼之人</p>
+    </div>
+    <div class="card">
+      <img class="member-avatar" src="https://q.qlogo.cn/g?b=qq&nk=3650257311&s=640">
+      <h3 style="text-align:center">汐月</h3>
+      <div class="member-tag">杂鱼二号</div>
+      <p style="text-align:center">来自马来西亚，杂鱼二号，传奇企业资源管理大师</p>
+    </div>
+    <div class="card">
+      <img class="member-avatar" src="https://q.qlogo.cn/g?b=qq&nk=3136655101&s=640">
+      <h3 style="text-align:center">怡然</h3>
+      <div class="member-tag">杂鱼三号</div>
+      <p style="text-align:center">善解人意偶现抽象的笨蛋</p>
+    </div>
+    <div class="card">
+      <img class="member-avatar" src="https://q.qlogo.cn/g?b=qq&nk=2267969625&s=640">
+      <h3 style="text-align:center">小（？）吕</h3>
+      <div class="member-tag">杂鱼四号</div>
+      <p style="text-align:center">深受amd迫害的人</p>
+    </div>
+  </div>
+</section>
+
+<!-- 联系 -->
+<section id="contact">
+  <h2 class="section-title">联系 & 入群</h2>
+  <div class="card" style="max-width:620px;margin:0 auto;text-align:center">
+    <p style="font-size:18px;margin:10px 0">QQ群：881048650</p>
+    <p style="font-size:18px;margin:10px 0">站长电邮:lkw@vip.qq.com</p>
+    <br>
+    <p>我们相逢在异世，但并不影响我们的关系</p>
+  </div>
+</section>
+
+<!-- 页脚 -->
+<footer>
+  <p>© 2026 祁欣网络</p>
+  <p>Build by Suqixin</p>
+</footer>
+
+<script>
+// 粒子星星
+const canvas = document.getElementById('starCanvas');
+const ctx = canvas.getContext('2d');
+let w,h;
+function resize(){
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize',resize);
+let stars = [];
+for(let i=0;i<120;i++){
+  stars.push({
+    x:Math.random()*w,
+    y:Math.random()*h,
+    r:Math.random()*1.2+0.2,
+    speed:Math.random()*0.4+0.1,
+    alpha:Math.random()
+  })
+}
+function drawStar(){
+  ctx.clearRect(0,0,w,h);
+  stars.forEach(s=>{
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle = `rgba(255,214,232,${s.alpha})`;
+    ctx.fill();
+    s.y += s.speed;
+    if(s.y>h){
+      s.y = 0;
+      s.x = Math.random()*w;
+    }
+    s.alpha += (Math.random()-0.5)*0.015;
+    s.alpha = Math.max(0.1,Math.min(0.7,s.alpha));
+  })
+  requestAnimationFrame(drawStar);
+}
+drawStar();
+
+// 鼠标跟随柔光
+const lightDot = document.getElementById('lightDot');
+document.addEventListener('mousemove',e=>{
+  lightDot.style.left = e.clientX + 'px';
+  lightDot.style.top = e.clientY + 'px';
+})
+
+// banner逐字入场
+const title = document.getElementById('bannerTitle');
+const desc = document.getElementById('bannerDesc');
+const btn = document.getElementById('bannerBtn');
+window.onload = ()=>{
+  setTimeout(()=>title.style.transition="opacity 0.8s ease",100);
+  setTimeout(()=>title.style.opacity="1",200);
+  setTimeout(()=>desc.style.transition="opacity 0.8s ease",500);
+  setTimeout(()=>desc.style.opacity="1",700);
+  setTimeout(()=>btn.style.transition="opacity 0.8s ease",1000);
+  setTimeout(()=>btn.style.opacity="1",1200);
+}
+
+// 移动端汉堡菜单
+const hamburger = document.getElementById('hamburger');
+const navMenu = document.getElementById('navMenu');
+hamburger.onclick = function(){
+  navMenu.classList.toggle('active');
+}
+const navLinks = document.querySelectorAll('.nav-links a');
+navLinks.forEach(link=>{
+  link.onclick = function(){
+    navMenu.classList.remove('active');
+  }
+})
+
+// 导航栏滚动变化
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll',()=>{
+  if(window.scrollY>50){
+    nav.classList.add('scrolled');
+  }else{
+    nav.classList.remove('scrolled');
+  }
+})
+
+// ========== 这里改了！滑出去就移除show，再次进入重新播放动画 ==========
+const sections = document.querySelectorAll('section');
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('show');
+    }else{
+      entry.target.classList.remove('show');
+    }
+  })
+},{threshold:0.2})
+sections.forEach(sec=>observer.observe(sec));
+
+// Live2D看板娘
+/*L2Dwidget.init({
+  model: {jsonPath: "https://unpkg.com/live2d-widget-model-miku@1.0.5/assets/miku.model.json"},
+  display: {superSample: 2, width:150, height:300, position:'right', hOffset:10, vOffset:-20},
+  mobile:{show:true,scale:0.75},
+  react:{opacityDefault:0.72,opacityOnHover:0.92}
+}) */
+</script>
 </body>
 </html>
